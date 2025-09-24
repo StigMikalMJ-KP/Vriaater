@@ -1,0 +1,248 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    background: radial-gradient(circle at center, #014d1a 0%, #012d0f 100%);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    height: 100vh;
+    overflow: hidden;
+    padding-top: 5%;
+    padding-bottom: 5%;
+}
+
+#start-page{
+    position: fixed;
+    height: 95%;
+    width: 95%;
+    background-color: #012d0f;
+    z-index: -1;
+}
+
+#background {
+    width: 100vw;
+    height: 100vh;
+    background-image: url(Assets/clover.png);
+    background-size: cover;
+    background-position: center;
+    border-left: 8px solid #2a1d0f;
+    border-right: 8px solid #2a1d0f;
+    filter: brightness(0.7) contrast(1.1);
+    position: absolute;
+    z-index: -1;
+}
+
+#game-table {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100vh;
+    width: 100vw;
+}
+
+
+#table-middle {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    padding-top: 4rem;
+    padding-bottom: 4rem;
+}
+
+
+#main-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 3rem;
+}
+
+#container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 3rem;
+}
+
+#backside-card img {
+    transform: rotate(270deg);
+    width: 100%;
+    height: auto;
+    border-radius: 12px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.5);
+    transition: transform 0.3s ease;
+}
+
+#backside-card img:hover {
+    transform: scale(1.1) rotate(270deg);
+}
+
+.card img {
+    width: 100%;
+    height: auto;
+    border-radius: 12px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.5);
+    transition: transform 0.3s ease;
+}
+
+.card img:hover {
+    transform: scale(1.05) rotate(-20deg);
+}
+
+
+.hand-cards {
+    display: flex;
+    flex-direction: row;
+    width: 50%;
+    min-width: 80px;
+}
+
+.hand-card {
+    rotate: 20deg;
+    margin-left: 0%;
+    margin-right: -5%;
+    min-width: 140px;
+}
+
+#player-cards {
+    width: 50%;
+    min-width: 140px;
+}
+
+
+#selectedCard {
+    border: 5px solid rgb(231, 7, 7);
+}
+
+
+
+#enemy-top {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#top-cards {
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+    min-width: 0;
+    width: min(95vw, 750px);
+}
+
+.enemy-top-cards {
+    margin-left: -3vw;
+}
+.enemy-top-cards:first-child {
+    margin-left: 0;
+}
+.enemy-top-cards img {
+    border-radius: 12px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.5);
+    transform: rotate(20deg);
+    width: 14vw;
+    min-width: 90px;
+    max-width: 160px;
+    aspect-ratio: 2/3;
+    height: auto;
+    transition: transform 0.3s;
+    object-fit: cover;
+}
+
+
+.vertical {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: min(18vw, 160px);
+    min-width: 90px;
+    max-width: 160px;
+}
+
+.enemy-cards-vertical {
+    margin-top: -9vw;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+.enemy-cards-vertical:first-child {
+    margin-top: 0;
+}
+
+.enemy-cards-vertical img {
+    border-radius: 12px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.5);
+    rotate: -30deg;
+    width: 14vw;
+    min-width: 90px;
+    max-width: 160px;
+    aspect-ratio: 2/3;
+    height: auto;
+    transition: transform 0.3s;
+    object-fit: cover;
+}
+
+#enemy-left, #enemy-right {
+    display: flex;
+    align-items: center;
+}
+
+@media (max-width: 800px) {
+    .enemy-top-cards img,
+    .enemy-cards-vertical img {
+        width: 20vw;
+        min-width: 60px;
+        max-width: 110px;
+    }
+    #top-cards {
+        width: min(98vw, 500px);
+    }
+    .enemy-top-cards { margin-left: -10vw; }
+    .vertical {
+        width: min(26vw, 110px);
+        max-width: 110px;
+    }
+    .enemy-cards-vertical { margin-top: -12vw; }
+}
+
+@media (max-width: 500px) {
+    .enemy-top-cards img,
+    .enemy-cards-vertical img {
+        width: 28vw;
+        min-width: 36px;
+        max-width: 70px;
+    }
+    #top-cards {
+        width: min(99vw, 320px);
+    }
+    .enemy-top-cards { margin-left: -15vw; }
+    .vertical {
+        width: min(34vw, 70px);
+        max-width: 70px;
+    }
+    .enemy-cards-vertical { margin-top: -18vw; }
+}
+
+
+
+#player-cards-container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    padding: 1rem;
+    height: 20vh;
+    z-index: 10;
+}
+
+#player-cards {
+    display: flex;
+    justify-content: center;
+    gap: -70px;
+}
