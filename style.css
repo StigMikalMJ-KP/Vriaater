@@ -4,27 +4,6 @@
     padding: 0;
 }
 
-body {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    background: radial-gradient(circle at center, #014d1a 0%, #012d0f 100%);
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    height: 100vh;
-    max-height: 100vh;
-    overflow: hidden;
-
-}
-
-#start-page{
-    position: fixed;
-    height: 95%;
-    width: 95%;
-    background-color: #012d0f;
-    z-index: -1;
-}
-
 #background {
     width: 100vw;
     height: 100vh;
@@ -38,177 +17,131 @@ body {
     z-index: -1;
 }
 
-#game-table {
+body {
     display: flex;
+    justify-content: center;
+    align-items: center;
     flex-direction: column;
-    justify-content: space-between;
+    background: radial-gradient(circle at center, #014d1a 0%, #012d0f 100%);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     height: 100vh;
-    width: 100vw;
+    max-height: 100vh;
+  
+
 }
 
 
-#table-middle {
-    display: flex;
-    justify-content: space-evenly;
-    align-items: center;
-    padding-top: 4rem;
-    padding-bottom: 4rem;
-}
-
-
-#main-section {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    gap: 3rem;
-}
-
-#container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 3rem;
-}
-
-#backside-card img {
-    transform: rotate(270deg);
+/* TABLE GRID */ 
+#game-table {
+    display: grid;
     width: 100%;
-    height: auto;
-    border-radius: 12px;
-    box-shadow: 0 8px 16px rgba(0,0,0,0.5);
+    height: 100%;
+    grid-template-areas:
+      "top top top"
+      "enemy-left cards-middle enemy-right"
+      "player-cards player-cards player-cards";
+    grid-template-columns: 1fr 2fr 1fr; 
+    grid-template-rows: 21vh 45vh 21vh;
+    gap: 10px;
+}
+
+#cards-middle {
+    display: flex;        
+    justify-content: center;
+    align-items: center;                
+    gap: 5%;
+    grid-area: cards-middle;
+
+}
+
+.mid-cards img{
+    width: 95%;
+}
+
+#card-bunk{
+    transform: rotate(90deg);
     transition: transform 0.3s ease;
 }
-
-#backside-card img:hover {
-    transform: scale(1.1) rotate(270deg);
+#card-bunk:hover{
+    transform: rotate(90deg) scale(1.1);
 }
 
-.card img {
-    width: 100%;
-    height: auto;
-    border-radius: 12px;
-    box-shadow: 0 8px 16px rgba(0,0,0,0.5);
+
+/* ======= PLAYER CARDS ==========*/
+#player-cards {
+    display: flex; 
+    justify-content: center;
+
+    grid-area: player-cards;
+ 
+    height: 27vh;
+    padding-bottom: 3%;
+}
+
+.player-hand-cards{
+    transform: rotate(23deg);
+    width: 10%;
+    margin-left: -5%;
+    
+}
+.player-hand-cards img{
+    height: 100%;
     transition: transform 0.3s ease;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.5);
 }
-
-.card img:hover {
+.player-hand-cards img:hover{
     transform: scale(1.05) rotate(-20deg);
 }
-
-
-.hand-cards {
-    display: flex;
-    flex-direction: row;
-    width: 50%;
-    min-width: 80px;
-}
-
-.hand-card {
-    rotate: 20deg;
-    margin-left: 0%;
-    margin-right: -5%;
-    min-width: 140px;
-}
-
-#player-cards {
-    width: 50%;
-    min-width: 140px;
-}
-
-
 #selectedCard {
     border: 5px solid rgb(231, 7, 7);
+    border-radius: 10%;
 }
 
 
-
-#enemy-top {
+/* =========ENEMY CARDS=============*/
+#top {
     display: flex;
     justify-content: center;
     align-items: center;
+
+    grid-area: top;
+
+    height: 20vh;
+    padding-top: 3%;
 }
 
-#top-cards {
+.enemy-hand-horisontal{
+    margin-left: -2%;
+    height: 100%;
+}
+.enemy-hand-horisontal img{
+    transform: rotate(120deg);
+    height: 100%;
+}
+
+
+#enemy-left {
+    grid-area: enemy-left;
+
+}
+
+#enemy-right {
+    grid-area: enemy-right;
+
+}
+
+.enemy-vertical{
     display: flex;
     justify-content: center;
-    flex-direction: row;
-    min-width: 0;
-    width: min(95vw, 750px);
-}
-
-.enemy-top-cards {
-    margin-left: -3vw;
-    height: 10vw;
-}
-.enemy-top-cards:first-child {
-    margin-left: 0;
-}
-.enemy-top-cards img {
-    border-radius: 12px;
-    box-shadow: 0 8px 16px rgba(0,0,0,0.5);
-    transform: rotate(20deg);
-    width: 14vw;
-    min-width: 90px;
-    max-width: 160px;
-    aspect-ratio: 2/3;
-    height: auto;
-    transition: transform 0.3s;
-    object-fit: cover;
-}
-
-
-.vertical {
-    display: flex;
+    align-items: center;
     flex-direction: column;
-    align-items: center;
-    width: min(18vw, 160px);
-    min-width: 90px;
-    max-width: 160px;
+
 }
-
-.enemy-cards-vertical {
-    margin-top: -4vw;
-    width: 50%;
-    display: flex;
-    justify-content: center;
+.enemy-hand-vertical{
+    margin-top: -15%;
+    height: 30%;
 }
-.enemy-cards-vertical:first-child {
-    margin-top: 0;
-}
-
-.enemy-cards-vertical img {
-    border-radius: 12px;
-    box-shadow: 0 8px 16px rgba(0,0,0,0.5);
-    rotate: -30deg;
-    width: 14vw;
-    min-width: 90px;
-    max-width: 160px;
-    aspect-ratio: 2/3;
-    height: auto;
-    transition: transform 0.3s;
-    object-fit: cover;
-}
-
-#enemy-left, #enemy-right {
-    display: flex;
-    align-items: center;
-}
-
-
-
-
-#player-cards-container {
-    display: flex;
-    justify-content: center;
-    align-items: flex-end;
-    padding: 1rem;
-    height: 18vh;
-    z-index: 10;
-}
-
-#player-cards {
-    display: flex;
-    justify-content: center;
-    gap: -70px;
+.enemy-hand-vertical img{
+    transform: rotate(120deg);
+    height: 100%;
 }

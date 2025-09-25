@@ -17,35 +17,15 @@ let selectedCard = {};
 let usedCards = [];
 let cardOnTop = randomCard();
 
-// ====== DOM Elements ======
-let topCardE = document.querySelector("#top-card");
-let handCardsE = document.querySelector("#player-cards");
-let backSideCard = document.querySelector("#backside-card");
-
-// ====== Initial Setup ======
-topCardE.innerHTML = `<img src="Assets/Kortbilder/${cardOnTop}.png" alt=""></img>`;
-makePlayerCards();
-
-// ====== Event Listeners ======
-topCardE.addEventListener("click", function(){
-    if(selectedCard.element){
-        topCardE.innerHTML = selectedCard.image;
-        cardOnTop = selectedCard.element;
-        selectedCard.element.remove();
-        selectedCard = {}
-    }
-});
-
 // ====== Functions ======
-function makePlayerCards(){    
-    for(let i = 0; i < 5; i++){
+function makePlayerCards(handCardsE){    
+    for(let i = 0; i < 8; i++){
         let randCard = randomCard();
         let newCard = document.createElement("div");
 
         newCard.innerHTML = `<img src="Assets/Kortbilder/${randCard}.png" alt=""></img>`;
-        newCard.className = "card hand-card";
+        newCard.className = "player-hand-cards";
 
-    
         newCard.addEventListener("click", function(){
             if(selectedCard.element && selectedCard.element !== newCard){
                 selectedCard.element.firstChild.id = "";
@@ -67,6 +47,15 @@ function makePlayerCards(){
     }
 }
 
+function checkIfCardAllowed(topCardE){
+    if(selectedCard.element){
+        topCardE.innerHTML = selectedCard.image;
+        cardOnTop = selectedCard.element;
+        selectedCard.element.remove();
+        selectedCard = {};
+    }
+}
+
 function randomCard(){
     let idx = randInt(0,3);
     let num = randInt(1,13);
@@ -79,6 +68,13 @@ function randInt(fom,tom){
 }
 
 // ====== Classes ======
+class player {
+    constructor(turnInLine, cards){
+        this.turn = turnInLine;
+        this.cards = cards;
+    }
+}
+
 class EnemyBot {
     constructor(turnInLine, cards){
         this.turn = turnInLine;
@@ -88,7 +84,25 @@ class EnemyBot {
 
 
 function main(){
+        // ====== DOM Elements ======
+    let topCardE = document.querySelector("#card-throw");
+    let handCardsE = document.querySelector("#player-cards");
+    let backSideCard = document.querySelector("#card-bunk");
+
+    // Objects
+
+    
+
+    makePlayerCards(handCardsE)
+    
+
+    // ====== Event Listeners ======
+    topCardE.addEventListener("click", function(){
+        checkIfCardAllowed(topCardE)
+    });
 
 
+    // ====== Initial Setup ======
+    topCardE.innerHTML += `<img src="Assets/Kortbilder/${cardOnTop}.png" alt=""></img>`;
 }
-document.addEventListener("DOMContentLoaded", main());
+document.addEventListener("DOMContentLoaded", main);
