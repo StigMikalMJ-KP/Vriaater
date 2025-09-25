@@ -12,9 +12,9 @@ body {
     background: radial-gradient(circle at center, #014d1a 0%, #012d0f 100%);
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     height: 100vh;
+    max-height: 100vh;
     overflow: hidden;
-    padding-top: 5%;
-    padding-bottom: 5%;
+
 }
 
 #start-page{
@@ -139,6 +139,7 @@ body {
 
 .enemy-top-cards {
     margin-left: -3vw;
+    height: 10vw;
 }
 .enemy-top-cards:first-child {
     margin-left: 0;
@@ -167,8 +168,8 @@ body {
 }
 
 .enemy-cards-vertical {
-    margin-top: -9vw;
-    width: 100%;
+    margin-top: -4vw;
+    width: 50%;
     display: flex;
     justify-content: center;
 }
@@ -194,41 +195,6 @@ body {
     align-items: center;
 }
 
-@media (max-width: 800px) {
-    .enemy-top-cards img,
-    .enemy-cards-vertical img {
-        width: 20vw;
-        min-width: 60px;
-        max-width: 110px;
-    }
-    #top-cards {
-        width: min(98vw, 500px);
-    }
-    .enemy-top-cards { margin-left: -10vw; }
-    .vertical {
-        width: min(26vw, 110px);
-        max-width: 110px;
-    }
-    .enemy-cards-vertical { margin-top: -12vw; }
-}
-
-@media (max-width: 500px) {
-    .enemy-top-cards img,
-    .enemy-cards-vertical img {
-        width: 28vw;
-        min-width: 36px;
-        max-width: 70px;
-    }
-    #top-cards {
-        width: min(99vw, 320px);
-    }
-    .enemy-top-cards { margin-left: -15vw; }
-    .vertical {
-        width: min(34vw, 70px);
-        max-width: 70px;
-    }
-    .enemy-cards-vertical { margin-top: -18vw; }
-}
 
 
 
@@ -237,7 +203,7 @@ body {
     justify-content: center;
     align-items: flex-end;
     padding: 1rem;
-    height: 20vh;
+    height: 18vh;
     z-index: 10;
 }
 
