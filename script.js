@@ -17,9 +17,12 @@ let selectedCard = {};
 let usedCards = [];
 let cardOnTop = randomCard();
 
+// ===== GAME CONFIG ====
+const starterCardCount = 5;
+
 // ====== Functions ======
 function makePlayerCards(handCardsE){    
-    for(let i = 0; i < 8; i++){
+    for(let i = 0; i < starterCardCount; i++){
         let randCard = randomCard();
         let newCard = document.createElement("div");
 
@@ -90,9 +93,6 @@ function main(){
     let backSideCard = document.querySelector("#card-bunk");
 
     // Objects
-
-    
-
     makePlayerCards(handCardsE)
     
 
