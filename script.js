@@ -17,8 +17,10 @@ let selectedCard = {};
 let usedCards = [];
 let cardOnTop = randomCard();
 
+
 // ===== GAME CONFIG ====
 const starterCardCount = 5;
+
 
 // ====== Functions ======
 function makePlayerCards(handCardsE){    
@@ -35,7 +37,7 @@ function makePlayerCards(handCardsE){
             }
             if(selectedCard.element !== newCard){
                 selectedCard = {
-                    element: newCard,
+                    element: newCard,   
                     image: `<img src="Assets/Kortbilder/${randCard}.png" alt=""></img>`,
                     cardNum: randCard
                 }
@@ -58,6 +60,7 @@ function checkIfCardAllowed(topCardE){
         selectedCard = {};
     }
 }
+
 
 function randomCard(){
     let idx = randInt(0,3);
@@ -87,10 +90,17 @@ class EnemyBot {
 
 
 function main(){
+    document.querySelector("#start-page").style.display = "none";
+    document.querySelector("#game-table").style.display = "grid"; 
+
         // ====== DOM Elements ======
     let topCardE = document.querySelector("#card-throw");
     let handCardsE = document.querySelector("#player-cards");
     let backSideCard = document.querySelector("#card-bunk");
+
+        // ==== GAME VARIABLES ======
+    let botAmount = document.querySelector("#enemyCount").value;
+    console.log(botAmount)
 
     // Objects
     makePlayerCards(handCardsE)
@@ -105,4 +115,4 @@ function main(){
     // ====== Initial Setup ======
     topCardE.innerHTML += `<img src="Assets/Kortbilder/${cardOnTop}.png" alt=""></img>`;
 }
-document.addEventListener("DOMContentLoaded", main);
+document.querySelector("#startBtn").addEventListener("click", main);
