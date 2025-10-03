@@ -20,7 +20,7 @@ let cardOnTop = randomCard();
 
 
 // ===== GAME CONFIG ====
-const starterCardCount = 5;
+const starterCardCount = 4;
 
 
 // ====== Functions ======
@@ -65,7 +65,6 @@ function drawCard(){
 
     let card;
     do {
-        
         card = randomCard();
     } while(drawnCards.includes(card))
     
@@ -86,31 +85,86 @@ function randInt(fom,tom){
 }
 
 // ====== Classes ======
-class player {
-    constructor(turnInLine, cards){
-        this.turn = turnInLine;
-        this.cards = cards;
-    }
-}
-
 class EnemyBot {
-    constructor(turnInLine, cards){
+    constructor(turnInLine, positionE){
         this.turn = turnInLine;
-        this.cards = cards;
+        this.cards = [];
+        this.position = positionE;
+    }
+    addCard(card){
+        this.cards.push(card);
+    }
+
+    removeCard(card){
+        this.cards = this.cards.filter(c => c !== card);
+    }
+
+    chooseCard(topCard){
+        let playable = this.cards.filter(c => {
+            let suit = c[0];
+            let number = c.slice(1);
+            let topSuit = topCard[0];
+            let topNumber = topCard.slice(1);
+
+            return (suit === topSuit | number === topNumber || number === "8");
+        })
+
+        return null; //will have to draw card
+    }
+
+    takeTurn(topCard){
+        let chosenCard = this.chooseCard(topCard);
+        if(chosenCard){
+            console.log(`Bot ${this.turn} spiller ${chosenCard}`);
+            return chosenCard;
+        } else{
+            let newCard = drawCard()
+            if(newCard){
+                this.addCard(newCard);
+                console.log(`Bot ${this.turn} trekker et kort`);
+            }
+            return null;
+        }
+    }
+
+    renderHand(){
+        this.position.innerHTML = "";
+        let handClass = "";
+
+        if (this.position.id === "top") handClass = "enemy-hand-horisontal";
+        else handClass = "enemy-hand-vertical";
+
+        this.cards.forEach(() => {
+            let cardDiv = document.createElement("div");
+            cardDiv.innerHTML = `<img src="Assets/Kortbilder/kortbakside.png" alt="">`;
+            cardDiv.className = handClass;
+            this.position.appendChild(cardDiv);
+        });
     }
 }
 
+const leftEnemy = document.querySelector("#enemy-left");
+const rightEnemy = document.querySelector("#enemy-right");
+const topEnemy = document.querySelector("#top");
+
+
+
+let bots = [];
 
 function main(){
     document.querySelector("#start-page").style.display = "none";
     document.querySelector("#game-table").style.display = "grid"; 
 
         // ====== DOM Elements ======
-    let topCardE = document.querySelector("#card-throw");
-    let handCardsE = document.querySelector("#player-cards");
-    let bunk = document.querySelector("#card-bunk");
+    const topCardE = document.querySelector("#card-throw");
+    const handCardsE = document.querySelector("#player-cards");
+    const bunk = document.querySelector("#card-bunk");
+
+    
+
 
         // ==== GAME VARIABLES ======
+    let enemyPoss = [topEnemy, leftEnemy, rightEnemy];
     let botAmount = document.querySelector("#enemyCount").value;
     console.log(botAmount)
 
@@ -130,6 +184,23 @@ function main(){
         let newCard = drawCard();
         giveDrawnCard(newCard, handCardsE)
     }
+
+    for(let i = 0; i < botAmount; i++){
+        bots.push(new EnemyBot(i+1, enemyPoss[i]));
+        for(let j = 0; j < starterCardCount; j++){
+            bots[i].addCard(drawCard());
+            bots[i].renderHand()
+         
+        }
+    }
+
+    for(let i = 0; i < bots.length; i++){
+        console.log(bots[i].cards)
+        console.log(bots[(i)].position)
+    }
+    
+
+
 
 }
 document.querySelector("#startBtn").addEventListener("click", main);
