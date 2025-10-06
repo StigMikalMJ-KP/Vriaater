@@ -113,12 +113,11 @@ body {
 }
 
 #card-bunk{
-    transform: rotate(90deg);
     transition: transform 0.3s ease;
     cursor: pointer;
 }
 #card-bunk:hover{
-    transform: rotate(90deg) scale(1.1);
+    transform: scale(1.1);
 }
 
 

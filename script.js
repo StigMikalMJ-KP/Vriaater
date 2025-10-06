@@ -2,7 +2,6 @@
 /*
 - Lage ferdig spiller-klassen/gjøre om funksjonene inn i klassen
 
-
 */
 
 
@@ -22,15 +21,6 @@ const starterCardCount = 5;
 
 
 // ====== Uni Functions ======
-function checkIfCardAllowed(topCardE){
-    if(selectedCard.element){
-        topCardE.innerHTML = selectedCard.image;
-        cardOnTop = selectedCard.element;
-        selectedCard.element.remove();
-        selectedCard = {};
-    }
-}
-
 function drawCard(){
     if(uniDrawnCards.length >= deckLength){
         alert("No more cards to draw");
@@ -47,8 +37,8 @@ function drawCard(){
 
 
 function randomCard(){
-    let idx = randInt(0,3);
-    let num = randInt(1,13);
+    const idx = randInt(0,3);
+    const num = randInt(1,13);
     let char = cardChars[idx];
     return char + num;
 }
@@ -74,7 +64,7 @@ class User {
         this.cards = this.cards.filter(c => c !== card);
     }
     
-    checkIfCardAllowed(topCardE){
+    useCard(topCardE){
         if(this.selectedCard.element){
             topCardE.innerHTML = this.selectedCard.image;
             cardOnTop = this.selectedCard.element;
@@ -85,18 +75,19 @@ class User {
 
     gameSetup(topCardE, bunk){
         for(let i = 0; i < starterCardCount; i++){
-            let newCard = drawCard();
+            const newCard = drawCard();
             this.addCard(newCard);
         }
 
         this.renderHand()
 
         topCardE.addEventListener("click", () => {
-            this.checkIfCardAllowed(topCardE);
+            this.useCard(topCardE);
         })
 
         bunk.addEventListener("click", () => {
             this.addCard(drawCard());
+            console.log(this.cards)
             this.renderHand();
         })
     }
@@ -150,7 +141,7 @@ class EnemyBot {
     }
 
     chooseCard(topCard){
-        let playable = this.cards.filter(c => {
+        const playable = this.cards.filter(c => {
             let suit = c[0];
             let number = c.slice(1);
             let topSuit = topCard[0];
@@ -159,7 +150,7 @@ class EnemyBot {
             return (suit === topSuit | number === topNumber || number === "8");
         })
         if(playable.length > 0){
-            let chosen = playable[randInt(0, playable.length)];
+            const chosen = playable[randInt(0, playable.length)];
             this.removeCard(chosen);
             return chosen;
         }
@@ -168,12 +159,12 @@ class EnemyBot {
     }
 
     takeTurn(topCard){
-        let chosenCard = this.chooseCard(topCard);
+        const chosenCard = this.chooseCard(topCard);
         if(chosenCard){
             console.log(`Bot ${this.turn} spiller ${chosenCard}`);
             return chosenCard;
         } else{
-            let newCard = drawCard()
+            const newCard = drawCard()
             if(newCard){
                 this.addCard(newCard);
                 console.log(`Bot ${this.turn} trekker et kort`);
@@ -190,7 +181,7 @@ class EnemyBot {
         else handClass = "enemy-hand-vertical";
 
         this.cards.forEach(() => {
-            let cardDiv = document.createElement("div");
+            const cardDiv = document.createElement("div");
             cardDiv.innerHTML = `<img src="Assets/Kortbilder/kortbakside.png" alt="">`;
             cardDiv.className = handClass;
             this.position.appendChild(cardDiv);
@@ -210,7 +201,6 @@ function main(){
 
         // ====== DOM Elements ======
     const topCardE = document.querySelector("#card-throw");
-    const handCardsE = document.querySelector("#player-cards");
     const bunk = document.querySelector("#card-bunk");
 
     // PLAYER
