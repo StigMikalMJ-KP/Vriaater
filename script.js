@@ -13,7 +13,7 @@ let mousePosY;
 let deckLength = 52;
 let cardChars = ["H", "K", "R", "S"];
 let uniDrawnCards = [];
-let cardOnTop = randomCard();
+let cardOnTop = randomCard(); uniDrawnCards.push(cardOnTop);
 let playerHasPlayed = false;
 
 
@@ -36,7 +36,6 @@ function drawCard(){
     return card;
 }
 
-
 function randomCard(){
     const idx = randInt(0,3);
     const num = randInt(1,13);
@@ -48,11 +47,11 @@ function randInt(fom,tom){
     return Math.floor(Math.random()*(tom-fom+1)+fom);
 }
 
-function renderTopCard(cardOnTop){
-    return 0; // BLI FERDIG MED DEN
+function renderTopCard(topCardE){
+    if(!cardOnTop) return;
+    topCardE.innerHTML = `<img src="Assets/Kortbilder/${cardOnTop}.png" alt="${cardOnTop}">`;
+    
 }
-
-
 
 // ===== Player Class =====
 class User {
@@ -90,7 +89,7 @@ class User {
             cardOnTop = this.selectedCard.cardNum;
             this.removeCard(this.selectedCard.cardNum)
             this.selectedCard.element.remove();
-            this.selectedCard = {};
+            this.selectedCard = { element: null, image: null, cardNum: null };
             return chosenCard;
         } else if(!cardWorks){
             return false
@@ -114,7 +113,7 @@ class User {
                 alert("The selected card is not useable!")
             }else{
                 console.log(`Player has used  ${usingCard}`)
-                User.onMoveEnd()
+                this.onMoveEnd()
             }
         })
 
@@ -155,6 +154,14 @@ class User {
             self.position.appendChild(cardDiv);
         });
     }
+
+    async waitForTurn(){
+        return new Promise(resolve => {
+            this.onMoveEnd = () => {
+                resolve();
+            }
+        })
+    }
 }
 
 function waitForPlayerTurn(){
@@ -175,10 +182,12 @@ class EnemyBot {
 
     addCard(card){
         this.cards.push(card);
+        this.renderHand();
     }
 
     removeCard(card){
         this.cards = this.cards.filter(c => c !== card);
+        this.renderHand();
     }
 
     chooseCard(){
@@ -188,12 +197,12 @@ class EnemyBot {
             let topSuit = cardOnTop[0];
             let topNumber = cardOnTop.slice(1);
 
-            return (suit === topSuit | number === topNumber || number === "8");
+            return (suit === topSuit || number === topNumber || number === "8");
         })
         if(playable.length > 0){
-            const chosen = playable[randInt(0, playable.length)];
-            this.removeCard(chosen);
+            const chosen = playable[randInt(0, playable.length - 1)];
             cardOnTop = chosen;
+            this.removeCard(chosen);
             return chosen;
         }
 
@@ -201,10 +210,9 @@ class EnemyBot {
     }
 
     takeTurn(){
-        const chosenCard = this.chooseCard(cardOnTop);
+        const chosenCard = this.chooseCard();
         if(chosenCard){
             console.log(`Bot spiller ${chosenCard}`);
-            this.chooseCard(cardOnTop)
         } else{
             const newCard = drawCard()
             if(newCard){
@@ -251,7 +259,7 @@ async function main(){
         // ==== GAME VARIABLES ======
     let enemyPoss = [topEnemy, leftEnemy, rightEnemy];
     let botAmount = document.querySelector("#enemyCount").value;
-    console.log(botAmount)
+    let gameLoop = true;
 
     // ====== Initial Setup ======
     topCardE.innerHTML += `<img src="Assets/Kortbilder/${cardOnTop}.png" alt=""></img>`;
@@ -269,25 +277,40 @@ async function main(){
         console.log(bot.cards)
     }
 
-    while(true){
+    while(gameLoop){
         playerHasPlayed = false;
 
         console.log("Waiting for player's turn...")
 
-        await waitForPlayerTurn();
+        await Player.waitForTurn();
+
+        if(Player.cards.length === 0){
+            alert("You win!");
+            break;
+        }
+        
 
         console.log("Player played! Time for the bots!")
 
         Player.canPlay = false;
         for(const bot of bots){
             bot.takeTurn();
-            console.log("orahhhhhhhhhhhhhhhhhhhhhh");
+            renderTopCard(topCardE);
+
+            if(bot.cards.length === 0){
+                alert("A bot has won!");
+                gameLoop = false;
+                return;
+            }
             
+
             await new Promise(resolve => setTimeout(resolve, 2000));
         }
-        Player.canPlay = true;
+        gameLoop === true ? Player.canPlay = true : Player.canPlay = false;
     }
-    
+
+
+    console.log("The bot won...")
 }
 
 document.querySelector("#startBtn").addEventListener("click", main);
