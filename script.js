@@ -17,7 +17,7 @@ let cardOnTop = randomCard();
 
 
 // ===== GAME CONFIG ====
-const starterCardCount = 5;
+const starterCardCount = 5
 
 
 // ====== Uni Functions ======
@@ -68,6 +68,7 @@ class User {
         if(this.selectedCard.element){
             topCardE.innerHTML = this.selectedCard.image;
             cardOnTop = this.selectedCard.element;
+            this.removeCard(this.selectedCard.cardNum)
             this.selectedCard.element.remove();
             this.selectedCard = {};
         }
