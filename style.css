@@ -109,6 +109,7 @@ body {
     align-items: center;                
     gap: 5%;
     grid-area: cards-middle;
+    border: solid black;
 
 }
 
@@ -180,10 +181,8 @@ body {
     height: 100%;
 }
 
-
 #enemy-left {
     grid-area: enemy-left;
-
 }
 
 #enemy-right {

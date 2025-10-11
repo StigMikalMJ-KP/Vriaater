@@ -1,7 +1,6 @@
 // TODO:
 /*
 - Fikse bot
-- Lage render topcard funksjon.
 */
 
 
@@ -61,6 +60,14 @@ class User {
         this.position = document.querySelector("#player-cards");
         this.selectedCard = {element: null, imageSrc: null, cardNum: null};
         this.canPlay = true;
+        this.drawCount = 0;
+    }
+    drawingCard(card){
+        this.cards.push(card);
+        this.drawCount += 1;
+        if(this.drawCount === 3){
+            this.onMoveEnd();
+        }
     }
 
     addCard(card){
@@ -118,7 +125,7 @@ class User {
         })
 
         bunk.addEventListener("click", () => {
-            this.addCard(drawCard());
+            this.drawingCard(drawCard());
             console.log(this.cards)
             this.renderHand();
         })
@@ -175,55 +182,86 @@ function waitForPlayerTurn(){
 
 // ====== Enemy Class ======
 class EnemyBot {
-    constructor(positionE){
+    constructor(positionE) {
         this.cards = [];
         this.position = positionE;
+        this.drawCount = 0;
+        this.onMoveEnd = () => {}; // default no-op
     }
 
-    addCard(card){
+    drawingCard(card) {
+        this.cards.push(card);
+        this.drawCount += 1;
+        this.renderHand();
+
+        if (this.drawCount >= 3) {
+            this.endTurn();
+        }
+    }
+
+    addCard(card) {
         this.cards.push(card);
         this.renderHand();
     }
 
-    removeCard(card){
+    removeCard(card) {
         this.cards = this.cards.filter(c => c !== card);
         this.renderHand();
     }
 
-    chooseCard(){
+    chooseCard() {
         const playable = this.cards.filter(c => {
-            let suit = c[0];
-            let number = c.slice(1);
-            let topSuit = cardOnTop[0];
-            let topNumber = cardOnTop.slice(1);
+            const suit = c[0];
+            const number = c.slice(1);
+            const topSuit = cardOnTop[0];
+            const topNumber = cardOnTop.slice(1);
 
             return (suit === topSuit || number === topNumber || number === "8");
-        })
-        if(playable.length > 0){
+        });
+
+        if (playable.length > 0) {
             const chosen = playable[randInt(0, playable.length - 1)];
-            cardOnTop = chosen;
-            this.removeCard(chosen);
             return chosen;
         }
 
-        return null; //will have to draw card
+        return null;
     }
 
-    takeTurn(){
-        const chosenCard = this.chooseCard();
-        if(chosenCard){
-            console.log(`Bot spiller ${chosenCard}`);
-        } else{
-            const newCard = drawCard()
-            if(newCard){
-                this.addCard(newCard);
-                console.log(`Bot trekker et kort`);
+    async takeTurn() {
+        this.drawCount = 0; // reset draw limit
+        let botIsPlaying = true;
+
+        while (this.drawCount < 3 && botIsPlaying) {
+            const chosenCard = this.chooseCard();
+
+            if (chosenCard) {
+                cardOnTop = chosenCard;
+                this.removeCard(chosenCard);
+                console.log(`Bot spiller ${chosenCard}`);
+                botIsPlaying = false;
+            } else {
+                const newCard = drawCard();
+                if (newCard) {
+                    this.drawingCard(newCard);
+                    console.log("Bot trekker et kort");
+                } else {
+                    botIsPlaying = false;
+                }
             }
-            return null;
+        }
+
+        // Simulate short delay before ending turn
+        await new Promise(res => setTimeout(res, 500));
+        this.endTurn();
+    }
+
+    endTurn() {
+        if (typeof this.onMoveEnd === "function") {
+            this.onMoveEnd();
         }
     }
 
-    renderHand(){
+    renderHand() {
         this.position.innerHTML = "";
         let handClass = "";
 
@@ -238,6 +276,7 @@ class EnemyBot {
         });
     }
 }
+
 
 const leftEnemy = document.querySelector("#enemy-left");
 const rightEnemy = document.querySelector("#enemy-right");
@@ -281,20 +320,19 @@ async function main(){
         playerHasPlayed = false;
 
         console.log("Waiting for player's turn...")
-
+        Player.drawCount = 0;
         await Player.waitForTurn();
 
         if(Player.cards.length === 0){
             alert("You win!");
             break;
         }
-        
 
         console.log("Player played! Time for the bots!")
 
         Player.canPlay = false;
         for(const bot of bots){
-            bot.takeTurn();
+            await bot.takeTurn();
             renderTopCard(topCardE);
 
             if(bot.cards.length === 0){
